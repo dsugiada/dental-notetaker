@@ -1,3 +1,4 @@
+//server index
 'use strict'
 
 import server from './core/server'
