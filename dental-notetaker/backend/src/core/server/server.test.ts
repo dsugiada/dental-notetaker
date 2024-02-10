@@ -1,7 +1,7 @@
 'use strict'
 
 import { expect } from 'chai'
-import { settings } from '../../core/config'
+import { settings } from '../config'
 import server from './index'
 
 let chai = require('chai')
