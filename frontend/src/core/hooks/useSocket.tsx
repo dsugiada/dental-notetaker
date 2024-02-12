@@ -1,21 +1,32 @@
-import { io } from 'socket.io-client'
-import useConfig from './useConfig'
+// src/core/hooks/useSocket.tsx
+import { useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 
 const useSocket = () => {
-  const { getApiUrl } = useConfig()
-  const url = getApiUrl()
-  const socket = io(url, { transports: ['websocket'] })
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-  /**
-   * Send message
-   * @param channel string
-   * @param message string/object
-   */
-  const send = (channel: string, message: string | object) => {
-    socket.emit(channel, message)
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token') || '';
+    const newSocket = io(process.env.REACT_APP_BACKEND_URL!, {
+      auth: { token },
+    });
 
-  return { socket, send }
-}
+    setSocket(newSocket);
 
-export default useSocket
+    newSocket.on('connect', () => console.log('Connected to socket server'));
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const send = (event: string, data: any) => {
+    if (socket) {
+      socket.emit(event, data);
+    }
+  };
+
+  return { send, socket };
+};
+
+export default useSocket;

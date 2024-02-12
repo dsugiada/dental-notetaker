@@ -59,6 +59,13 @@ const Navigation = () => {
             <FontAwesomeIcon className="icon" icon={faUser} />
             Profile
           </Link>
+          <Link
+            className="button animate__animated animate__bounceIn"
+            to="/dental-examination"
+          >
+            <FontAwesomeIcon className="icon" icon={faUserPlus} /> {/* Choose an appropriate icon */}
+            Dental Notes
+          </Link>
           <div
             className="button animate__animated animate__bounceIn"
             onClick={() => {

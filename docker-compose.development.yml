@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   backend:
-    container_name: backend
+    container_name: dental-backend
     build:
       context: ./backend
     ports:
@@ -12,7 +12,7 @@ services:
       - ./backend:/backend
       - /backend/node_modules
   frontend:
-    container_name: frontend
+    container_name: dental-frontend
     build:
       context: ./frontend
     ports:
