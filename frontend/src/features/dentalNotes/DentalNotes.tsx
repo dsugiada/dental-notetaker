@@ -40,7 +40,9 @@ const DentalNotes = () => {
       ...prev,
       [questionId]: prev[questionId] ? [...prev[questionId], option] : [option],
     }));
+    // Emit the selection to the server
     send('selectExaminationOption', { questionId, option });
+    console.log(`Option selected: questionId=${questionId}, option=${option}`);
   };
 
   return (
