@@ -26,6 +26,8 @@ const DentalNotes = () => {
 
   useEffect(() => {
     if (socket) {
+      console.log('Attempting to connect...');
+
       socket.on('updateExamination', (data: { questionId: number; option: string }) => {
         console.log('Examination data updated', data);
         const { questionId, option } = data;
@@ -37,6 +39,7 @@ const DentalNotes = () => {
 
       return () => {
         if (socket) {
+          socket.off('connect');
           socket.off('updateExamination');
         }
       };
@@ -67,7 +70,7 @@ const DentalNotes = () => {
         <div className="dental-notes">
           {questions.map((question) => (
             <div key={question.id} className="question">
-              <div className="question-text">{question.text}</div>
+              <div className="title">{question.text}</div>
               <div className="options">
                 {question.options.map((option) => (
                   <button
@@ -81,66 +84,6 @@ const DentalNotes = () => {
               </div>
             </div>
           ))}
-        </div>
-
-
-        <div className="text">
-          Thanks for using my boilerplate, find some details below to get
-          started.
-        </div>
-        <div className="text">
-          Like the project? Show some support at{' '}
-          <a
-            className="link"
-            target="_blank"
-            rel="noreferrer"
-            href="https://ko-fi.com/tamas0547"
-          >
-            ko-fi
-          </a>
-          . <FontAwesomeIcon className="icon" icon={faThumbsUp} />
-          <br />
-          Don't forget to give it a star on{' '}
-          <a
-            className="link"
-            target="_blank"
-            rel="noreferrer"
-            href="https://github.com/tamasszoke/mern-seed"
-          >
-            GitHub
-          </a>
-          . <FontAwesomeIcon className="icon" icon={faStar} />
-        </div>
-        <div className="title">
-          <FontAwesomeIcon className="icon" icon={faFileAlt} />
-          Summary
-        </div>
-        <div className="text">
-          As you probably know, it uses Node, Mocha, MongoDB on the backend, and
-          React, Jest, Cypress on the frontend. Both sides are armed with
-          TypeScript and packed with Docker. Using JWT for authentication and
-          authorization.
-        </div>
-        <div className="title">
-          <FontAwesomeIcon className="icon" icon={faFileAlt} />
-          Documentation
-        </div>
-        <div className="text">
-          See the readme for the complete documentation. It also includes
-          development practices, guidelines, and conventions.{' '}
-          <a
-            className="link"
-            href="https://github.com/tamasszoke/mern-seed#readme"
-          >
-            https://github.com/tamasszoke/mern-seed#readme
-          </a>
-        </div>
-        <div className="title">
-          <FontAwesomeIcon className="icon" icon={faFileAlt} />
-          Credits
-        </div>
-        <div className="text">
-          <p>Made by Tamas Szoke @ 2022</p>
         </div>
       </div>
     </div>

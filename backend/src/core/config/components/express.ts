@@ -9,20 +9,22 @@ import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import contentSecurityPolicy from 'helmet-csp'
 
+export const corsOptions = {
+  origin: ['https://localhost:3000'], //added for development, currently hardcoded, need to reference settings.ts
+  methods: ["GET", "POST"],
+  credentials: true,
+  'Access-Control-Allow-Credentials': true,
+  'Access-Control-Allow-Origin': true,
+  'Access-Control-Allow-Headers': true,
+  'Access-Control-Expose-Headers': true,
+}
+
 /**
  * Express configuration
  * @returns object
  */
 const init = (): Express => {
   const app = express()
-  const corsOptions = {
-    origin: true,
-    credentials: true,
-    'Access-Control-Allow-Credentials': true,
-    'Access-Control-Allow-Origin': true,
-    'Access-Control-Allow-Headers': true,
-    'Access-Control-Expose-Headers': true,
-  }
   const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
     max: 200, // Limit each IP to 20 requests per windowMs
