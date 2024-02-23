@@ -42,6 +42,7 @@ const Login = () => {
       navigate('/')
     } catch (err: any) {
       console.warn(err)
+      console.log(apiUrl)
       toast.warn('Login failed!')
     }
     reset()

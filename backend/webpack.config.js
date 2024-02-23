@@ -13,7 +13,7 @@ module.exports = {
     filename: 'index.js',
   },
   resolve: {
-    extensions: ['.ts', '.js', '.yaml'],
+      extensions: ['.ts','.tsx', '.js','.jsx', '.yaml'],
   },
   mode: 'production',
   externals: [nodeExternals()],

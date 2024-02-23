@@ -14,12 +14,9 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^17.0.45",
-    "@types/react": "^18.0.17",
-    "@types/react-dom": "^18.0.6",
     "axios": "^0.27.2",
     "cypress": "^10.10.0",
+    "js-cookie": "^3.0.5",
     "mimelib": "^0.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -30,7 +27,7 @@
     "react-toastify": "^9.0.8",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.5.2",
-    "typescript": "^4.7.4",
+    "typescript-cookie": "^1.0.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -59,6 +56,12 @@
     ]
   },
   "devDependencies": {
-    "sass": "^1.70.0"
+    "@types/jest": "^29.5.12",
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20.11.19",
+    "@types/react": "^18.2.56",
+    "@types/react-dom": "^18.2.19",
+    "sass": "^1.70.0",
+    "typescript": "^5.3.3"
   }
 }

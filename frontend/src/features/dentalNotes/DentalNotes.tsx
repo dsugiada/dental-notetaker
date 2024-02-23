@@ -1,10 +1,10 @@
 import './DentalNotes.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faFileAlt,
+  //faFileAlt,
   faHome,
-  faStar,
-  faThumbsUp,
+  //faStar,
+  //faThumbsUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react';

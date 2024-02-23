@@ -17,7 +17,7 @@ import useSocket from './core/hooks/useSocket';
 function App() {
   const dispatch = useAppDispatch();
   const { apiUrl, theme } = useSelector((state: RootState) => state.home);
-
+  
   const { getApiUrl } = useConfig();
   const { socket } = useSocket();
 
