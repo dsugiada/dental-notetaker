@@ -29,7 +29,6 @@ const DentalNotes = () => {
       console.log('Attempting to connect...');
 
       socket.on('updateExamination', (data: { questionId: number; option: string }) => {
-        console.log('Examination data updated', data);
         const { questionId, option } = data;
         setSelectedOptions(prev => ({
           ...prev,

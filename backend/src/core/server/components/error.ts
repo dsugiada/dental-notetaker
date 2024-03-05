@@ -47,7 +47,7 @@ const internal = (
  * Error handler for uncaught exceptions
  */
 process.on('uncaughtException', (err, origin) => {
-  show.debug(`[ERROR] Uncaught exception ${err}, origin ${origin}`)
+  show.debug(`[ERROR] Uncaught exception "${err}", origin "${origin}"`)
   process.exitCode = 1 // Exit gracefully
 })
 
@@ -56,7 +56,7 @@ process.on('uncaughtException', (err, origin) => {
  */
 process.on('unhandledRejection', (reason: any, promise: any) => {
   show.debug(
-    `[ERROR] Unhandled Rejection ${promise.toString()}, reason ${reason.toString()}`
+    `[ERROR] Unhandled Rejection "${promise.toString()}", reason "${reason.toString()}"`
   )
   process.exitCode = 1 // Exit gracefully
 })

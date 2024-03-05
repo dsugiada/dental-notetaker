@@ -40,7 +40,7 @@ const handleError = (db: mongoose.Connection): void => {
  * @param db object
  */
 const handleConnection = (db: mongoose.Connection): void => {
-  db.on('connected', () => {
+    db.on('connected', () => {
     show.debug('[DATABASE] Connected')
   })
 }

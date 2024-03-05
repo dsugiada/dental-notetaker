@@ -13,8 +13,8 @@ const init = (io: any): void => {
     show.debug('[SOCKET] Client connected!')
 
     // Define the change stream
-    const changeStream = mongoose.connection.collection('userInteractions').watch();
-
+    const changeStream = mongoose.connection.collection('examination').watch();
+    //console.log(changeStream)
     changeStream.on('change', (change) => {
       console.log('[Change Stream] Change detected:', change);
       // Emit changes to all connected clients
