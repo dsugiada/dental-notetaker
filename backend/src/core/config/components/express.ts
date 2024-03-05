@@ -45,9 +45,9 @@ const init = (): Express => {
     app.use('/public', express.static(`${settings.folder.public}`))
   }
 
-  //Passport configuration
-  passportStrategy(passport);
-  app.use(passport.initialize());
+  //Passport configuration - code has been included in the passport.ts file, but is not needed for socket.io authentication at this time
+  //passportStrategy(passport);
+  //app.use(passport.initialize());
 
   app.use(cookieParser(settings.cookie.secret))
   app.use(

@@ -11,6 +11,8 @@ import { response } from '../../../core/server'
 
 const templateDir = 'features/auth/auth/templates'
 
+
+//The following code will check the user login, so I don't technically need to use passport.js as it appears to have been coded within this application. However, if I do want to utilise google etc as authentication, passport.js will be useful
 /**
  * Check login
  * @param req object
