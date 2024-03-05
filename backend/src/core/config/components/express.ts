@@ -8,6 +8,8 @@ import helmet from 'helmet'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import contentSecurityPolicy from 'helmet-csp'
+import passport from 'passport'
+import passportStrategy from './passport';
 
 export const corsOptions = {
   origin: ['https://localhost:3000'], //added for development, currently hardcoded, need to reference settings.ts
@@ -42,6 +44,11 @@ const init = (): Express => {
     // API documentation files
     app.use('/public', express.static(`${settings.folder.public}`))
   }
+
+  //Passport configuration
+  passportStrategy(passport);
+  app.use(passport.initialize());
+
   app.use(cookieParser(settings.cookie.secret))
   app.use(
     bodyParser.json({
