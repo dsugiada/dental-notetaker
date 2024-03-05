@@ -12,15 +12,24 @@ const init = (io: any): void => {
   io.on('connection', (socket: any): void => {
     show.debug('[SOCKET] Client connected!')
 
-    // Define the change stream
-    const changeStream = mongoose.connection.collection('examination').watch();
-    //console.log(changeStream)
-    changeStream.on('change', (change) => {
-      console.log('[Change Stream] Change detected:', change);
-      // Emit changes to all connected clients
-      io.emit('updateState', change);
-    });
+     // Define the change stream
+     const changeStream = mongoose.connection.collection('examination').watch();
+     //console.log(changeStream)
+     changeStream.on('change', (change) => {
+       console.log('[Change Stream] Change detected:', change);
+       // Emit changes to all connected clients
+       io.emit('updateState', change);
+     });
 
+    // const changeStream = mongoose.connection.collection('examinations').watch([
+    //   { $match: { 'fullDocument.userId': userId } }
+    // ]);
+    
+    // changeStream.on('change', (change) => {
+    //   console.log('[Change Stream] Change detected:', change);
+    //   // Emit changes to the connected client
+    //   socket.emit('updateState', change.fullDocument);
+    // });    
 
     socket.on('namespace', (message: object): void => {
       show.debug(message)

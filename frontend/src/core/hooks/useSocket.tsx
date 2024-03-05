@@ -14,10 +14,15 @@ const useSocket = (): UseSocketReturn => {
 
   useEffect(() => {
     const initSocket = async () => {
-      const isAuthenticated = await verifyAuthentication();
-      console.log(isAuthenticated); //-> verified as true
-      if (isAuthenticated) {
-        const newSocket = io('https://localhost:3001', { transports: ['websocket'] });
+      const token = await verifyAuthentication();
+      //console.log(token); //-> verified as true
+      if (token) {
+        const newSocket = io('https://localhost:3001', { 
+          transports: ['websocket'],
+           auth: {
+             token: token
+           } 
+        });
         setSocket(newSocket);
       }
     };
@@ -33,7 +38,7 @@ const useSocket = (): UseSocketReturn => {
 
   const send = (channel: string, message: string | object) => {
     if (socket) {
-      console.log('Send function working');
+      //console.log('Send function working');
       socket.emit(channel, message);
     }
   };

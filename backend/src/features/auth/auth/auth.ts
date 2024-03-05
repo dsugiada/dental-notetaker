@@ -20,29 +20,62 @@ const templateDir = 'features/auth/auth/templates'
  * @param next object
  * @returns object
  */
+// const check = async (
+//   req: express.Request,
+//   res: express.Response,
+//   next: express.NextFunction
+// ): Promise<express.Response<any, Record<string, any>>> => {
+//   try {
+//     show.debug('[AUTH][CHECK] Request')
+//     const { token, refreshToken } = req.cookies
+//     if (!token || !refreshToken) {
+//       throw new ClientError(1001, 'parameters not found')
+//     }
+//     let result = await local.check(token, refreshToken, res)
+//     show.debug('[AUTH][CHECK] Success')
+//     return response.send(res, 200, result, false)
+//   } catch (err: any) {
+//     show.debug(`[AUTH][CHECK] Error ${err.type} ${err.code} ${err.message}`)
+//     if (err.type === 'client') {
+//       return response.send(res, 400, false, err)
+//     } else {
+//       return response.send(res, 500, false, err)
+//     }
+//   }
+// }
+
 const check = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ): Promise<express.Response<any, Record<string, any>>> => {
   try {
-    show.debug('[AUTH][CHECK] Request')
-    const { token, refreshToken } = req.cookies
+    show.debug('[AUTH][CHECK] Request');
+    const { token, refreshToken } = req.cookies;
     if (!token || !refreshToken) {
-      throw new ClientError(1001, 'parameters not found')
+      throw new ClientError(1001, 'parameters not found');
     }
-    let result = await local.check(token, refreshToken, res)
-    show.debug('[AUTH][CHECK] Success')
-    return response.send(res, 200, result, false)
+    let result = await local.check(token, refreshToken, res);
+    show.debug('[AUTH][CHECK] Success');
+
+    // Modify the result to include the token
+    const modifiedResult = {
+      ...result,
+      token, // Include the token obtained from the cookies
+      refreshToken // Optionally include the refreshToken if needed
+    };
+
+    return response.send(res, 200, modifiedResult, false);
   } catch (err: any) {
-    show.debug(`[AUTH][CHECK] Error ${err.type} ${err.code} ${err.message}`)
+    show.debug(`[AUTH][CHECK] Error ${err.type} ${err.code} ${err.message}`);
     if (err.type === 'client') {
-      return response.send(res, 400, false, err)
+      return response.send(res, 400, false, err);
     } else {
-      return response.send(res, 500, false, err)
+      return response.send(res, 500, false, err);
     }
   }
-}
+};
+
 
 /**
  * Registration
