@@ -8,8 +8,8 @@ import helmet from 'helmet'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import contentSecurityPolicy from 'helmet-csp'
-import passport from 'passport'
-import passportStrategy from './passport';
+//import passport from 'passport'
+//import passportStrategy from './passport';
 
 export const corsOptions = {
   origin: ['https://localhost:3000'], //added for development, currently hardcoded, need to reference settings.ts
