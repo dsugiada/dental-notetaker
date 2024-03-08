@@ -5,6 +5,7 @@ import { Express } from 'express'
 import homeRoute from '../../features/home/home.routes'
 import authRoute from '../../features/auth/auth/auth.routes'
 import userRoute from '../../features/models/user/user.routes'
+import questionRoute from '../../features/models/question'
 import docsRoute from '../../features/docs/docs.routes'
 import { error } from './index'
 

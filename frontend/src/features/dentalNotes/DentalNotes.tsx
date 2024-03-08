@@ -17,14 +17,24 @@ interface Question {
   options: string[];
 }
 
-const questions: Question[] = [
-  {
-    id: 1,
-    text: "Question 1",
-    options: ["Option 1", "Option 2", "Option 3"],
-  },
-  // Add more questions as needed
-];
+const [questions, setQuestions] = useState<Question[]>([]);
+
+useEffect(() => {
+  const fetchQuestions = async () => {
+    try {
+      const response = await fetch('/api/questions');
+      if (!response.ok) {
+        throw new Error('Failed to fetch questions');
+      }
+      const data = await response.json();
+      setQuestions(data);
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+    }
+  };
+
+  fetchQuestions();
+}, []);
 
 const DentalNotes: React.FC  = () => {
   const theme = useSelector((state: any) => state.home.theme)

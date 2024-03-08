@@ -61,6 +61,21 @@ const schema: mongoose.Schema = new Schema({
     type: Date,
     required: true,
   },
+  role: {
+    type: String,
+    required: true,
+    enum: ['patient', 'clinician', 'admin'],
+  },
+  profile: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    refPath: 'roleProfiles',
+  },
+  roleProfiles: {
+    type: String,
+    required: true,
+    enum: ['Patient', 'Clinician'], // Corresponding model names for refPath
+  },
 })
 
 /**
