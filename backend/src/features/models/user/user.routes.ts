@@ -1,7 +1,7 @@
 'use strict'
 
 import express from 'express'
-import auth from '../auth/auth'
+import auth from '../../auth/auth'
 const router = express.Router()
 import user from './index'
 

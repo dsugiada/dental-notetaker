@@ -1,6 +1,6 @@
 'use strict'
 
-import User from '../../../user/user.model'
+import User from '../../../models/user/user.model'
 import crypto from 'crypto'
 import expiration from './expiration'
 import {

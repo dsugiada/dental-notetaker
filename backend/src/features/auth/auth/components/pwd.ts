@@ -1,6 +1,6 @@
 'use strict'
 
-import User from '../../../user/user.model'
+import User from '../../../models/user/user.model'
 import crypto from 'crypto'
 import { UserResponse } from '../auth.interface'
 import { ClientError } from '../../../../core/server/server.interface'

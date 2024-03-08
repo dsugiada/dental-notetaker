@@ -1,7 +1,7 @@
 'use strict'
 
 import User from '../user.model'
-import { ClientError } from '../../../core/server/server.interface'
+import { ClientError } from '../../../../core/server/server.interface'
 
 /**
  * Get all user data by id

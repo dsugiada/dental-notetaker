@@ -1,8 +1,8 @@
 'use strict'
 
 import { expect } from 'chai'
-import { settings } from '../../core/config'
-import server from '../../core/server'
+import { settings } from '../../../core/config'
+import server from '../../../core/server'
 import user from './index'
 import User from './user.model'
 

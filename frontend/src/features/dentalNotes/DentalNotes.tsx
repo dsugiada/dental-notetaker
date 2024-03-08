@@ -10,7 +10,14 @@ import { useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react';
 import useSocket from '../../core/hooks/useSocket';
 
-const questions = [
+// Assuming you have a type or interface for your questions
+interface Question {
+  id: number;
+  text: string;
+  options: string[];
+}
+
+const questions: Question[] = [
   {
     id: 1,
     text: "Question 1",
@@ -19,7 +26,7 @@ const questions = [
   // Add more questions as needed
 ];
 
-const DentalNotes = () => {
+const DentalNotes: React.FC  = () => {
   const theme = useSelector((state: any) => state.home.theme)
   const [selectedOptions, setSelectedOptions] = useState<Record<number, string[]>>({});
   const { send, socket } = useSocket();
@@ -43,14 +50,28 @@ const DentalNotes = () => {
     }
   }, [socket]);
 
-  const handleOptionSelect = (questionId: number, option: string) => {
-    setSelectedOptions(prev => ({
-      ...prev,
-      [questionId]: prev[questionId] ? [...prev[questionId], option] : [option],
-    }));
-    // Emit the selection to the server
-    send('selectExaminationOption', { questionId, option });
-    console.log(`Option selected: questionId=${questionId}, option=${option}`);
+  const handleOptionSelect = async (patientId: string, questionId: number, option: string) => {
+    // Assuming you have a way to get the current clinician's ID
+    const clinicianId = "clinician's ID"; // This should be dynamically obtained
+
+    try {
+      await fetch('/api/examinations/saveSelection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          clinicianId,
+          patientId,
+          questionId,
+          selectedOptions: [option],
+        }),
+      });
+
+      console.log('Selection saved successfully');
+    } catch (error) {
+      console.error('Error saving selection:', error);
+    }
   };
 
   return (
@@ -73,7 +94,7 @@ const DentalNotes = () => {
                   <button
                   key={option}
                   className={`option-button ${selectedOptions[question.id]?.includes(option) ? 'selected' : ''}`}
-                  onClick={() => handleOptionSelect(question.id, option)}
+                  onClick={() => handleOptionSelect("test", question.id, option)} //! hard coded patient ID
                 >
                   {option}
                 </button>

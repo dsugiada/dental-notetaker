@@ -3,7 +3,7 @@
 import express from 'express'
 import jwt from '../../jwt'
 import pwd from './pwd'
-import User from '../../../user/user.model'
+import User from '../../../models/user/user.model'
 import { settings } from '../../../../core/config'
 import { UserResponse, UserData } from '../auth.interface'
 import { ClientError } from '../../../../core/server/server.interface'

@@ -2,9 +2,9 @@
 
 import express from 'express'
 import profile from './components/profile'
-import { settings, show } from '../../core/config'
-import { ClientError } from '../../core/server/server.interface'
-import { response } from '../../core/server'
+import { settings, show } from '../../../core/config'
+import { ClientError } from '../../../core/server/server.interface'
+import { response } from '../../../core/server'
 
 /**
  * Get all user data
