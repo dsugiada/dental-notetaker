@@ -7,7 +7,7 @@ import {
   faThumbsUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { useSelector } from 'react-redux'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useSocket from '../../core/hooks/useSocket';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -18,6 +18,7 @@ interface Question {
   _id: string;
   text: string;
   options: { text: string }[];
+  single: boolean;
 }
 
 const DentalNotes: React.FC = () => {
@@ -33,7 +34,6 @@ const DentalNotes: React.FC = () => {
     try {
       const response = await axios.get(`${apiUrl}/questions/retrieve`);
       setQuestions(response.data.result);
-      console.log(response.data.result)
     } catch (error) {
       console.error('Failed to load questions', error);
       toast.warn('Failed to load questions');
@@ -46,10 +46,7 @@ const DentalNotes: React.FC = () => {
 
   useEffect(() => {
     if (socket) {
-      console.log('Attempting to connect...');
-
       socket.on('updateExamination', (data: { questionId: string; option: string }) => {
-        console.log('Examination data updated', data);
         const { questionId, option } = data;
         setSelectedOptions(prev => ({
           ...prev,
@@ -66,24 +63,53 @@ const DentalNotes: React.FC = () => {
     }
   }, [socket]);
 
-  const handleOptionSelect = async (patientId: string, questionId: string, option: string) => {
-    const clinicianId = "clinician's ID"; // This should be dynamically obtained
   
-    try {
-      await axios.post('/api/examinations/saveSelection', {
-        clinicianId,
-        patientId,
-        questionId,
-        selectedOptions: [option],
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      console.log('Selection saved successfully');
-    } catch (error) {
-      console.error('Error saving selection:', error);
-    }
+
+  const handleOptionSelect = async (patientId: string, questionId: string, option: string, singleSelect: boolean = false) => {
+    const clinicianId = "clinician's ID"; // Dynamically obtained, ensure this is correctly fetched.
+
+    setSelectedOptions(prevSelectedOptions => {
+      const isOptionSelected = prevSelectedOptions[questionId]?.includes(option);
+      let newSelectedOptions;
+
+      if (isOptionSelected) {
+        // Filter out the deselected option
+        newSelectedOptions = {
+          ...prevSelectedOptions,
+          [questionId]: prevSelectedOptions[questionId].filter(selectedOption => selectedOption !== option),
+        };
+      } else {
+        // Add the newly selected option
+        newSelectedOptions = {
+          ...prevSelectedOptions,
+          [questionId]: [...(prevSelectedOptions[questionId] || []), option],
+        };
+      }
+      console.log(newSelectedOptions)
+      return newSelectedOptions;
+    });
+
+    // Following this update, you would continue with your backend update and socket emissions as necessary.
+
+    // // Prepare data to send to backend
+    // const dataToSend = {
+    //   clinicianId,
+    //   patientId,
+    //   questionId,
+    //   selectedOptions: selectedOptions[questionId] || [],
+    // };
+
+    // // Update the selection state in the backend
+    // try {
+    //   await axios.post('/api/examinations/updateSelection', dataToSend, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
+    //   console.log('Selection updated successfully');
+    // } catch (error) {
+    //   console.error('Error updating selection:', error);
+    // }
 
     // Emit the selection to the server
     send('selectExaminationOption', { questionId, option });
@@ -105,15 +131,18 @@ const DentalNotes: React.FC = () => {
             <div key={question._id} className="question">
               <div className="title">{question.text}</div>
               <div className="options">
-                {question.options.map((option, index) => (
-                  <button
-                    key={index}
-                    className={`option-button ${selectedOptions[question._id]?.includes(option.text) ? 'selected' : ''}`}
-                    onClick={() => handleOptionSelect("test", question._id, option.text)}
-                  >
-                    {option.text}
-                  </button>
-                ))}
+                {question.options.map((option, index) => {
+                  console.log(`Rendering option ${option.text} for question ${question._id}:`, selectedOptions[question._id]?.includes(option.text) ? 'selected' : 'not selected');
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleOptionSelect("test", question._id, option.text)}
+                      className={`option-button ${selectedOptions[question._id]?.includes(option.text) ? 'selected' : ''}`}
+                    >
+                      {option.text}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ))}

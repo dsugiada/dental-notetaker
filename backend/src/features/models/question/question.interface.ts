@@ -13,6 +13,7 @@ interface Question {
   text: string;
   options: Option[];
   created: Date;
+  single: boolean;
   // Add any additional fields here, if needed
 }
 

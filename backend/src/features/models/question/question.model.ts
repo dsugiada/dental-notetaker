@@ -21,6 +21,10 @@ const questionSchema = new Schema({
     type: Date,
     required: true,
   },
+  single: {
+    type: Boolean,
+    required: true,
+  },
   // Additional fields as needed
 });
 
