@@ -1,43 +1,92 @@
 'use strict'
 
 import express from 'express'
-import profile from './components/profile'
+// import action from '../components/actions'
 import { settings, show } from '../../../core/config'
 import { ClientError } from '../../../core/server/server.interface'
 import { response } from '../../../core/server'
+import QuestionModel from '../../models/question/question.model'
 
 /**
- * Get all user data
+ * Get all question data
  * @param req object
  * @param res object
  * @param next object
  * @returns object
  */
-const check = async (
+const get = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ): Promise<express.Response<any, Record<string, any>>> => {
   try {
-    show.debug('[USER][PROFILE][CHECK] Request')
-    const { id } = req.body
-    if (!id) {
-      throw new ClientError(1001, 'parameters not found')
+    show.debug('[QUESTION][GET] Request')
+    const result = await QuestionModel.find({})
+    console.log(result)
+    if (!result) {
+      throw new ClientError(1002, 'No questions found')
+    } else{
+      show.debug('[QUESTION][GET] Success')
+      return result
     }
-    let result = await profile.check(id)
-    show.debug('[USER][PROFILE][CHECK] Success')
-    return response.send(res, 200, result, false)
-  } catch (err: any) {
+  }
+  catch (err: any) {
     show.debug(
-      `[USER][PROFILE][CHECK] Error ${err.type} ${err.code} ${err.message}`
+      `[QUESTION][GET] Error ${err.type} ${err.code} ${err.message}`
     )
     if (err.type === 'client') {
       return response.send(res, 400, false, err)
     } else {
       return response.send(res, 500, false, err)
+      //response.send(res, 200, result, false)
     }
   }
 }
+
+/**
+ * add question
+ * @param req object
+ * @param res object
+ * @param next object
+ * @returns object
+ */
+const add = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+): Promise<express.Response<any, Record<string, any>> | undefined> => {
+  try {
+    show.debug('[QUESTION][ADD] Request');
+    const { text, options } = req.body;
+
+    if (!text || !options) {
+      throw new ClientError(1001, 'parameters not found');
+    }
+
+    // Create a new Question document using the Mongoose model
+    const question = new QuestionModel({
+      text: text,
+      options: options,
+      created: new Date() // This will automatically be converted to an ISO string by Mongoose
+    });
+
+    // Save the new Question document to the database
+    const result = await question.save();
+
+    show.debug('[QUESTION][ADD] Success');
+    return response.send(res, 200, result, false);
+  } catch (err: any) {
+    show.debug(`[QUESTION][ADD] Error ${err.type} ${err.code} ${err.message}`);
+    if (
+      err.type === 'client' ||
+      (err.name === 'MongoServerError' && err.code === 11000) // Duplicated record
+    ) {
+      return response.send(res, 400, false, err);
+    } else {
+      return response.send(res, 500, false, err);
+    }
+  }
+};
 
 /**
  * Remove user account
@@ -52,19 +101,21 @@ const remove = async (
   next: express.NextFunction
 ): Promise<express.Response<any, Record<string, any>>> => {
   try {
-    show.debug('[USER][PROFILE][REMOVE] Request')
+    show.debug('[QUESTION][REMOVE] Request')
     const { id } = req.body
     if (!id) {
       throw new ClientError(1001, 'parameters not found')
     }
-    let result = await profile.remove(id)
-    res.clearCookie('token', settings.cookie.options)
-    res.clearCookie('refreshToken', settings.cookie.options)
-    show.debug('[USER][PROFILE][REMOVE] Success')
+    const result = await QuestionModel.findOneAndRemove({ _id: id })
+    show.debug('[QUESTION][REMOVE] Success')
+    if (!result) {
+      throw new ClientError(1002, 'account not found')
+    }else{
     return response.send(res, 200, result, false)
+    }
   } catch (err: any) {
     show.debug(
-      `[USER][PROFILE][REMOVE] Error ${err.type} ${err.code} ${err.message}`
+      `[QUESTION][REMOVE] Error ${err.type} ${err.code} ${err.message}`
     )
     if (err.type === 'client') {
       return response.send(res, 400, false, err)
@@ -75,6 +126,7 @@ const remove = async (
 }
 
 export default {
-  check,
+  get,
+  add,
   remove,
 }

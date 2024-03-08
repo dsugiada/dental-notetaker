@@ -17,6 +17,10 @@ const questionSchema = new Schema({
     required: true,
   },
   options: [optionSchema],
+  created: {
+    type: Date,
+    required: true,
+  },
   // Additional fields as needed
 });
 

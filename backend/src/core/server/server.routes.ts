@@ -5,7 +5,7 @@ import { Express } from 'express'
 import homeRoute from '../../features/home/home.routes'
 import authRoute from '../../features/auth/auth/auth.routes'
 import userRoute from '../../features/models/user/user.routes'
-import questionRoute from '../../features/models/question'
+import questionRoute from '../../features/models/question/question.routes'
 import docsRoute from '../../features/docs/docs.routes'
 import { error } from './index'
 
@@ -18,6 +18,7 @@ const init = (app: Express) => {
   app.use('/api/auth', authRoute)
   app.use('/api/user', userRoute)
   app.use('/api/docs', docsRoute)
+  app.use('/api/questions', questionRoute)
   app.use('*', error.routing)
   app.use(error.internal)
 }
