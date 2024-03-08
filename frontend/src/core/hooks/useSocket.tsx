@@ -10,7 +10,7 @@ interface UseSocketReturn {
 
 const useSocket = (): UseSocketReturn => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const { getApiUrl } = useConfig();
+  //const { getApiUrl } = useConfig();
 
   useEffect(() => {
     const initSocket = async () => {

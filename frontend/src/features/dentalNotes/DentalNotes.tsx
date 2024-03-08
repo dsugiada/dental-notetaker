@@ -26,8 +26,6 @@ const DentalNotes = () => {
 
   useEffect(() => {
     if (socket) {
-      console.log('Attempting to connect...');
-
       socket.on('updateExamination', (data: { questionId: number; option: string }) => {
         const { questionId, option } = data;
         setSelectedOptions(prev => ({
