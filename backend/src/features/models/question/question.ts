@@ -22,26 +22,21 @@ const get = async (
   try {
     show.debug('[QUESTION][GET] Request')
     const result = await QuestionModel.find({})
-    console.log(result)
-    if (!result) {
-      throw new ClientError(1002, 'No questions found')
-    } else{
-      show.debug('[QUESTION][GET] Success')
-      return result
-    }
-  }
-  catch (err: any) {
-    show.debug(
-      `[QUESTION][GET] Error ${err.type} ${err.code} ${err.message}`
-    )
-    if (err.type === 'client') {
-      return response.send(res, 400, false, err)
+    if (!result.length) {
+      throw new ClientError(1002, 'No questions found');
     } else {
-      return response.send(res, 500, false, err)
-      //response.send(res, 200, result, false)
+      show.debug('[QUESTION][GET] Success');
+      return response.send(res, 200, result, false);
+    }
+  } catch (err: any) {
+    show.debug(`[QUESTION][GET] Error ${err.type} ${err.code} ${err.message}`);
+    if (err.type === 'client') {
+      return response.send(res, 400, false, err);
+    } else {
+      return response.send(res, 500, false, err);
     }
   }
-}
+};
 
 /**
  * add question

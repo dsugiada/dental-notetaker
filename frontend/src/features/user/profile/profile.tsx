@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Key } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,9 +11,9 @@ import { authSlice } from '../../auth/auth';
 import './profile.scss';
 
 interface Question {
-  id: number;
+  _id: string;
   text: string;
-  options: string[];
+  options: { text: string }[];
 }
 
 // Define your user type based on your state structure
@@ -41,9 +41,9 @@ const Profile: React.FC = () => {
 
   // Define the expected structure for your state selectors
   useEffect(() => {
-      fetchQuestions();
-      checkProfile();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchQuestions();
+    checkProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const fetchQuestions = async () => {
@@ -52,7 +52,7 @@ const Profile: React.FC = () => {
         setLoading(true);
         setLoadingMessage('Loading questions...');
         const response = await axios.get(`${apiUrl}/questions/retrieve`);
-        setQuestions(response.data);
+        setQuestions(response.data.result);
         console.log(response)
       } catch (error) {
         console.error('Failed to load questions', error);
@@ -103,7 +103,7 @@ const Profile: React.FC = () => {
     // This might involve setting a state to show a modal, for example
   };
 
-  const handleRemoveQuestion = async (questionId: number) => {
+  const handleRemoveQuestion = async (questionId: string) => {
     // Removal logic here
   };
 
@@ -129,20 +129,27 @@ const Profile: React.FC = () => {
             </div>
             {user_role === 'admin' && (
               <>
-                <div className="admin-actions">
-                  <button onClick={handleAddQuestion}>Add Question</button>
-                </div>
                 <div className="questions-list">
                   {questions.map((question) => (
-                    <div key={question.id} className="question-item">
-                      <div className="question-text">{question.text}</div>
-                      <div className="actions">
-                        <button onClick={() => handleRemoveQuestion(question.id)}>
-                          Remove
-                        </button>
+                    <div key={question._id} className="question-item">
+                      <div className="question-text">{question.text} <button onClick={() => handleRemoveQuestion(question._id)}> Remove </button></div>
+                      <div className="options">
+                        {question.options.map((option, index) => (
+                          <button
+                            key={index} // Since option is an object, better use index as key
+                            className="option-button"
+                            // You can either omit the onClick or set it to a no-op function
+                            onClick={() => { }} // No action performed when button is clicked
+                          >
+                            {option.text}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="admin-actions">
+                  <button onClick={handleAddQuestion}>Add Question</button>
                 </div>
               </>
             )}
