@@ -22,8 +22,8 @@ const DentalNotes: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({});
 
   // Accessing userId from Redux store
-  //const userId = useSelector((state: RootState) => state.user.user?.id) || 'defaultUserId';
-  const userId = "65c9c656703608f3856be2af";
+  const userId = useSelector((state: RootState) => state.auth.user.id)
+  //const userId = "65c9c656703608f3856be2af";
   console.log(userId)
 
   const { send, socket } = useSocket(userId);
