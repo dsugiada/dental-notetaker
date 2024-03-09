@@ -27,6 +27,14 @@ const init = (io: any): void => {
     socket.on('disconnect', (): void => {
       show.debug('[SOCKET] Client disconnected!')
     })
+
+    socket.on('selectExaminationOption', (data: any) => {
+        show.debug('[SOCKET] selectExaminationOption received', data);
+      
+        const userId = data.userId; // Extract userId from the data payload
+        const channel = `private-${userId}`;
+        io.to(channel).emit('examinationOptionSelected', data);
+    });
   })
 }
 

@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { RootState } from '../../core/store/store';
 
-// Assuming you have a type or interface for your questions
 interface Question {
   _id: string;
   text: string;
@@ -17,115 +16,98 @@ interface Question {
 }
 
 const DentalNotes: React.FC = () => {
-  //pull question from question bank database
   const [questions, setQuestions] = useState<Question[]>([]);
-  const apiUrl: string = useSelector((state: RootState) => state.home.apiUrl);
-
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
-
-  const fetchQuestions = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/questions/retrieve`);
-      setQuestions(response.data.result);
-    } catch (error) {
-      console.error('Failed to load questions', error);
-      toast.warn('Failed to load questions');
-    }
-  }
-
-  const theme = useSelector((state: any) => state.home.theme);
+  const apiUrl = useSelector((state: RootState) => state.home.apiUrl);
+  const theme = useSelector((state: RootState) => state.home.theme);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({});
-  const userId: string = "65c9c656703608f3856be2af" //useSelector((state: RootState) => state.user.userId) ?? 'defaultUserId';
 
-  // Now pass the userId to useSocket
+  // Accessing userId from Redux store
+  //const userId = useSelector((state: RootState) => state.user.user?.id) || 'defaultUserId';
+  const userId = "65c9c656703608f3856be2af";
+  console.log(userId)
+
   const { send, socket } = useSocket(userId);
 
   useEffect(() => {
-    // Example: listen to an event
-    socket?.on('someEvent', (data) => {
-      console.log(data);
-    });
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/questions/retrieve`);
+        setQuestions(response.data.result);
+      } catch (error) {
+        console.error('Failed to load questions', error);
+        toast.warn('Failed to load questions');
+      }
+    };
+
+    fetchQuestions();
+  }, [apiUrl]);
+
+  useEffect(() => {
+    const handleExaminationOptionSelected = (data: { userId: string; questionId: string | number; selected: any; option: string; }) => {
+      console.log('Received data on private channel:', data);
+      setSelectedOptions(prev => {
+        const newSelections = { ...prev };
+        const currentSelections = new Set(newSelections[data.questionId] || []);
+
+        if (data.selected) {
+          currentSelections.add(data.option);
+        } else {
+          currentSelections.delete(data.option);
+        }
+
+        newSelections[data.questionId] = Array.from(currentSelections);
+        return newSelections;
+      });
+    };
+
+    socket?.on('examinationOptionSelected', handleExaminationOptionSelected);
 
     return () => {
-      // Cleanup: make sure to disconnect or remove event listeners when the component unmounts
-      socket?.off('someEvent');
+      socket?.off('examinationOptionSelected', handleExaminationOptionSelected);
     };
-  }, [socket]);
+  }, [socket, userId]);
 
-  const handleOptionSelect = async (patientId: string, questionId: string, option: string, singleSelect: boolean = false) => {
-    const clinicianId = "clinician's ID"; // Dynamically obtained, ensure this is correctly fetched.
-    setSelectedOptions(prevSelectedOptions => {
-      const isOptionSelected = prevSelectedOptions[questionId]?.includes(option);
-      let newSelectedOptions;
+  const handleOptionSelect = (patientId: string, questionId: string, option: string, singleSelect: boolean) => {
+    setSelectedOptions(prev => {
+      const updated = { ...prev };
+      const selections = singleSelect ? new Set<string>() : new Set<string>(updated[questionId] || []);
 
-      if (isOptionSelected) {
-        // Filter out the deselected option
-        newSelectedOptions = {
-          ...prevSelectedOptions,
-          [questionId]: prevSelectedOptions[questionId].filter(selectedOption => selectedOption !== option),
-        };
+      if (selections.has(option)) {
+        selections.delete(option);
       } else {
-        // Add the newly selected option
-        newSelectedOptions = {
-          ...prevSelectedOptions,
-          [questionId]: [...(prevSelectedOptions[questionId] || []), option],
-        };
+        selections.add(option);
       }
-      console.log(newSelectedOptions)
-      return newSelectedOptions;
+
+      updated[questionId] = Array.from(selections);
+
+      send('selectExaminationOption', {
+        userId,
+        patientId,
+        questionId,
+        option,
+        selected: selections.has(option)
+      });
+
+      return updated;
     });
-
-    // Following this update, you would continue with your backend update and socket emissions as necessary.
-
-    // // Prepare data to send to backend
-    // const dataToSend = {
-    //   clinicianId,
-    //   patientId,
-    //   questionId,
-    //   selectedOptions: selectedOptions[questionId] || [],
-    // };
-
-    // // Update the selection state in the backend
-    // try {
-    //   await axios.post('/api/examinations/updateSelection', dataToSend, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-    //   console.log('Selection updated successfully');
-    // } catch (error) {
-    //   console.error('Error updating selection:', error);
-    // }
-
-    // Emit the selection to the server
-    send(userId, option);
   };
 
   return (
-    <div
-      className={`home-container animate__animated animate__fadeIn animate__delay-1s ${theme}`}
-    >
+    <div className={`home-container animate__animated animate__fadeIn animate__delay-1s ${theme}`}>
       <div className="content">
-        <div className="title">
-          <FontAwesomeIcon className="icon" icon={faHome} />
-          Welcome
-        </div>
-
-
+        {/* Content */}
         <div className="dental-notes">
-          {questions.map((question) => (
+          {questions.map(question => (
             <div key={question._id} className="question">
               <div className="title">{question.text}</div>
               <div className="options">
                 {question.options.map((option, index) => {
-                  console.log(`Rendering option ${option.text} for question ${question._id}:`, selectedOptions[question._id]?.includes(option.text) ? 'selected' : 'not selected');
+                  const isSelected = selectedOptions[question._id]?.includes(option.text);
                   return (
                     <button
                       key={index}
-                      onClick={() => handleOptionSelect("test", question._id, option.text)}
-                      className={`option-button ${selectedOptions[question._id]?.includes(option.text) ? 'selected' : ''}`}
+                      onClick={() => handleOptionSelect("test", question._id, option.text, question.single)}
+                      className={`option-button ${isSelected ? 'selected' : ''}`}
                     >
                       {option.text}
                     </button>
@@ -137,7 +119,7 @@ const DentalNotes: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DentalNotes
+export default DentalNotes;

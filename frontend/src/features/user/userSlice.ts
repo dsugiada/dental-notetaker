@@ -1,16 +1,21 @@
+// Example userSlice definition
 import { createSlice } from '@reduxjs/toolkit';
 
-export const userSlice = createSlice({
+const initialState = {
+  user: {
+    id: null, // Assuming the user ID is stored here
+    // other user properties
+  },
+  // other state properties
+};
+
+const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    userId: null,
-  },
+  initialState,
   reducers: {
-    setUserId: (state, action) => {
-      state.userId = action.payload;
-    },
+    // reducers to set user state
   },
+  // other configurations
 });
 
-export const { setUserId } = userSlice.actions;
-export default userSlice.reducer;
+export default userSlice;
