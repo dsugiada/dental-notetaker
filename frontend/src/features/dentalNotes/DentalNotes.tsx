@@ -1,13 +1,8 @@
-import './DentalNotes.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faFileAlt,
-  faHome,
-  faStar,
-  faThumbsUp,
-} from '@fortawesome/free-solid-svg-icons'
-import { useSelector } from 'react-redux'
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import './DentalNotes.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileAlt, faHome, faStar, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
 import useSocket from '../../core/hooks/useSocket';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -40,34 +35,27 @@ const DentalNotes: React.FC = () => {
     }
   }
 
-  const theme = useSelector((state: any) => state.home.theme)
+  const theme = useSelector((state: any) => state.home.theme);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({});
-  const { send, socket } = useSocket();
+  const userId: string = "65c9c656703608f3856be2af" //useSelector((state: RootState) => state.user.userId) ?? 'defaultUserId';
+
+  // Now pass the userId to useSocket
+  const { send, socket } = useSocket(userId);
 
   useEffect(() => {
-    if (socket) {
-      socket.on('updateExamination', (data: { questionId: string; option: string }) => {
-        const { questionId, option } = data;
-        setSelectedOptions(prev => ({
-          ...prev,
-          [questionId]: prev[questionId] ? [...prev[questionId], option] : [option],
-        }));
-      });
+    // Example: listen to an event
+    socket?.on('someEvent', (data) => {
+      console.log(data);
+    });
 
-      return () => {
-        if (socket) {
-          socket.off('connect');
-          socket.off('updateExamination');
-        }
-      };
-    }
+    return () => {
+      // Cleanup: make sure to disconnect or remove event listeners when the component unmounts
+      socket?.off('someEvent');
+    };
   }, [socket]);
-
-  
 
   const handleOptionSelect = async (patientId: string, questionId: string, option: string, singleSelect: boolean = false) => {
     const clinicianId = "clinician's ID"; // Dynamically obtained, ensure this is correctly fetched.
-
     setSelectedOptions(prevSelectedOptions => {
       const isOptionSelected = prevSelectedOptions[questionId]?.includes(option);
       let newSelectedOptions;
@@ -112,7 +100,7 @@ const DentalNotes: React.FC = () => {
     // }
 
     // Emit the selection to the server
-    send('selectExaminationOption', { questionId, option });
+    send(userId, option);
   };
 
   return (

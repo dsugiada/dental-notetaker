@@ -19,7 +19,6 @@ function App() {
   const { apiUrl, theme } = useSelector((state: RootState) => state.home);
 
   const { getApiUrl } = useConfig();
-  const { socket } = useSocket();
 
   // Send cookies with every request
   axios.defaults.withCredentials = true;
@@ -62,19 +61,7 @@ function App() {
     // Get essential data from server
     getUser();
 
-    // Listen for socket.io connection messages
-    if (socket) {
-      socket.on('connect', connectListener);
-      socket.on('disconnect', disconnectListener);
-
-      // The socket.io listeners must be removed
-      // In order to prevent multiple event registrations
-      return () => {
-        socket.off('connect', connectListener);
-        socket.off('disconnect', disconnectListener);
-      };
-    }
-  }, [socket, connectListener, disconnectListener, getUser, getApiUrl, dispatch]); // Updated dependency array
+  }, [connectListener, disconnectListener, getUser, getApiUrl, dispatch]); // Updated dependency array
 
   return (
     <div className={`app-container ${theme}`}>
