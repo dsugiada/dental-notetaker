@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import useConfig from './useConfig';
 
-const useSocket = (userId: string, selectedPatient: string|null) => {
+const useSocket = (userId: string) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const { getBaseUrl } = useConfig();
 

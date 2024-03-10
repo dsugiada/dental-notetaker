@@ -35,7 +35,6 @@ const DentalNotes: React.FC = () => {
 
   const { getApiUrl } = useConfig();
   const apiUrl = getApiUrl();
-  //const apiUrl = useSelector((state: RootState) => state.home.apiUrl); this is effectively hard-coding the apiUrl, while useConfig builds the url whether in development or production, not sure if this line is dynamically set based on appropriate ports/builds/etc
 
   const theme = useSelector((state: RootState) => state.home.theme);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>({});
@@ -47,7 +46,7 @@ const DentalNotes: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user.id) //this is dynamically set at login, so can be pulled globally without issue
 
   //Form socket connection with useSocket hook
-  const { send, socket } = useSocket(userId, selectedPatient);
+  const { socket, send } = useSocket(userId);
 
   const patientOptions = [
     ...patients.map(patient => ({ value: patient._id, label: patient.name })),
@@ -291,6 +290,3 @@ const DentalNotes: React.FC = () => {
 
 export default DentalNotes;
 
-function setIsModalOpen(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
