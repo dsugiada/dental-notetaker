@@ -7,10 +7,17 @@ interface Selection {
   selectedOptions: string[];
 }
 
+interface PatientRecord {
+  patientId: {
+    type: string
+  };
+  selections: string[];
+}
+
 interface Examination extends Document {
   userId: ObjectId;
   email: string;
   selections: Selection[];
 }
 
-export { Selection, Examination };
+export { Selection, PatientRecord, Examination };

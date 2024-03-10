@@ -1,10 +1,10 @@
 'use strict'
 
 import express from 'express'
-import { settings, show } from '../../../core/config'
-import { ClientError } from '../../../core/server/server.interface'
-import { response } from '../../../core/server'
-import QuestionModel from './question.model'
+import { settings, show } from '../../../../core/config'
+import { ClientError } from '../../../../core/server/server.interface'
+import { response } from '../../../../core/server'
+import PatientModel from './patient.model'
 
 /**
  * Get all question data
@@ -19,16 +19,16 @@ const get = async (
   next: express.NextFunction
 ): Promise<express.Response<any, Record<string, any>>> => {
   try {
-    show.debug('[QUESTION][GET] Request')
-    const result = await QuestionModel.find({})
+    show.debug('[PATIENT][GET] Request')
+    const result = await PatientModel.find({})
     if (!result.length) {
       throw new ClientError(1002, 'No questions found');
     } else {
-      show.debug('[QUESTION][GET] Success');
+      show.debug('[PATIENT][GET] Success');
       return response.send(res, 200, result, false);
     }
   } catch (err: any) {
-    show.debug(`[QUESTION][GET] Error ${err.type} ${err.code} ${err.message}`);
+    show.debug(`[PATIENT][GET] Error ${err.type} ${err.code} ${err.message}`);
     if (err.type === 'client') {
       return response.send(res, 400, false, err);
     } else {
@@ -50,27 +50,31 @@ const add = async (
   next: express.NextFunction
 ): Promise<express.Response<any, Record<string, any>> | undefined> => {
   try {
-    show.debug('[QUESTION][ADD] Request');
-    const { text, options } = req.body;
+    show.debug('[PATIENT][ADD] Request');
+    const newPatient = req.body;
+    const clinicianId = newPatient.userId;
+    const name = newPatient.name;
+    const referenceNo = newPatient.referenceNo;
 
-    if (!text || !options) {
+    // Create a new patient instance
+    const patient = new PatientModel({
+      name,
+      referenceNo,
+      assignedClinicians: [clinicianId], // Automatically assign the clinician
+      // ... any other default fields you might want to initialize
+    });
+
+    // Save the new patient
+    await patient.save();
+
+    if (!name || !referenceNo) {
       throw new ClientError(1001, 'parameters not found');
     }
 
-    // Create a new Question document using the Mongoose model
-    const question = new QuestionModel({
-      text: text,
-      options: options,
-      created: new Date() // This will automatically be converted to an ISO string by Mongoose
-    });
-
-    // Save the new Question document to the database
-    const result = await question.save();
-
-    show.debug('[QUESTION][ADD] Success');
-    return response.send(res, 200, result, false);
+    show.debug('[PATIENT][ADD] Success');
+    return response.send(res, 200, patient, false);
   } catch (err: any) {
-    show.debug(`[QUESTION][ADD] Error ${err.type} ${err.code} ${err.message}`);
+    show.debug(`[PATIENT][ADD] Error ${err.type} ${err.code} ${err.message}`);
     if (
       err.type === 'client' ||
       (err.name === 'MongoServerError' && err.code === 11000) // Duplicated record
@@ -95,13 +99,13 @@ const remove = async (
   next: express.NextFunction
 ): Promise<express.Response<any, Record<string, any>>> => {
   try {
-    show.debug('[QUESTION][REMOVE] Request')
+    show.debug('[PATIENT][REMOVE] Request')
     const { id } = req.body
     if (!id) {
       throw new ClientError(1001, 'parameters not found')
     }
-    const result = await QuestionModel.findOneAndRemove({ _id: id })
-    show.debug('[QUESTION][REMOVE] Success')
+    const result = await PatientModel.findOneAndRemove({ _id: id })
+    show.debug('[PATIENT][REMOVE] Success')
     if (!result) {
       throw new ClientError(1002, 'account not found')
     }else{
@@ -109,7 +113,7 @@ const remove = async (
     }
   } catch (err: any) {
     show.debug(
-      `[QUESTION][REMOVE] Error ${err.type} ${err.code} ${err.message}`
+      `[PATIENT][REMOVE] Error ${err.type} ${err.code} ${err.message}`
     )
     if (err.type === 'client') {
       return response.send(res, 400, false, err)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Key } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,10 +21,10 @@ interface User {
   id: string;
 }
 
-interface UserResponse {
-  id: string;
-  // other properties
-}
+// interface UserResponse {
+//   id: string;
+//   // other properties
+// }
 
 
 const Profile: React.FC = () => {

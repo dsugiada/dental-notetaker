@@ -6,11 +6,18 @@ const useConfig = () => {
   const getApiUrl = () => {
     const host = process.env.REACT_APP_BACKEND_HOST
     const port = process.env.REACT_APP_BACKEND_PORT
-    const url = `https://${host}:${port}/api`
-    return url
+    const urlApi = `https://${host}:${port}/api`
+    return urlApi
   }
 
-  return { getApiUrl }
+  const getBaseUrl = () => {
+    const host = process.env.REACT_APP_BACKEND_HOST
+    const port = process.env.REACT_APP_BACKEND_PORT
+    const urlBase = `https://${host}:${port}/`
+    return urlBase
+  }
+
+  return { getApiUrl , getBaseUrl}
 }
 
 export default useConfig

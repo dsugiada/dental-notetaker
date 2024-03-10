@@ -64,7 +64,8 @@ const schema: mongoose.Schema = new Schema({
   role: {
     type: String,
     required: true,
-    enum: ['patient', 'clinician', 'admin'],
+    enum: ['patient', 'clinician', 'admin', 'user'],
+    default: 'user'
   },
   profile: {
     type: Schema.Types.ObjectId,

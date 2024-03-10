@@ -4,8 +4,9 @@ import useConfig from './useConfig';
 
 const useSocket = (userId: string) => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const { getApiUrl } = useConfig();
-  const url = 'https://localhost:3001' //getApiUrl(); // This should come from a config or environment variable
+  const { getBaseUrl } = useConfig();
+
+  const url = getBaseUrl();
 
   useEffect(() => {
     // Create a socket instance when the hook is run for the first time
@@ -25,7 +26,7 @@ const useSocket = (userId: string) => {
       newSocket.emit('leavePrivateChannel', userId);
       newSocket.disconnect();
     };
-  }, [userId]); // Only re-run if userId changes
+  }, [userId, url]); // Only re-run if userId changes
 
   // Define a function for sending messages
   const send = (channel: string, message: string | object) => {

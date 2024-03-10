@@ -12,7 +12,7 @@ import Navigation from './common/navigation/navigation';
 import Background from './common/background/background';
 import Routing from './core/routing/routing';
 import Notification from './common/notification/notification';
-import useSocket from './core/hooks/useSocket';
+//import useSocket from './core/hooks/useSocket';
 
 function App() {
   const dispatch = useAppDispatch();
