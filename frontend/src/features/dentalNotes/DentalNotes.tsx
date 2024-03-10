@@ -47,7 +47,7 @@ const DentalNotes: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user.id) //this is dynamically set at login, so can be pulled globally without issue
 
   //Form socket connection with useSocket hook
-  const { send, socket } = useSocket(userId);
+  const { send, socket } = useSocket(userId, selectedPatient);
 
   const patientOptions = [
     ...patients.map(patient => ({ value: patient._id, label: patient.name })),
@@ -131,7 +131,13 @@ const DentalNotes: React.FC = () => {
 
   //Receive selection from backend
   useEffect(() => {
-    const handleExaminationOptionSelected = (data: { userId: string; questionId: string | number; selected: any; option: string; }) => {
+    const handleExaminationOptionSelected = (data: {
+      userId: string;
+      patientId: string;
+      questionId: string | number;
+      selected: any;
+      option: string;
+    }) => {
       console.log('Received data on private channel:', data);
       setSelectedOptions(prev => {
         const newSelections = { ...prev };
@@ -250,7 +256,7 @@ const DentalNotes: React.FC = () => {
                   return (
                     <button
                       key={index}
-                      onClick={() => handleOptionSelect("123456789123456789123456", question._id, option.text, question.single)}
+                      onClick={() => handleOptionSelect(selectedPatient, question._id, option.text, question.single)}
                       className={`option-button ${isSelected ? 'selected' : ''}`}
                     >
                       {option.text}

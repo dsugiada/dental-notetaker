@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import useConfig from './useConfig';
 
-const useSocket = (userId: string) => {
+const useSocket = (userId: string, selectedPatient: string|null) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const { getBaseUrl } = useConfig();
 
@@ -40,54 +40,3 @@ const useSocket = (userId: string) => {
 };
 
 export default useSocket;
-
-
-// import { useState, useEffect } from 'react';
-// import { io, Socket } from 'socket.io-client';
-// import useConfig from './useConfig';
-// import { verifyAuthentication } from '../../features/auth/verify/verify';
-
-// interface UseSocketReturn {
-//   socket: Socket | null;
-//   send: (channel: string, message: string | object) => void;
-// }
-
-// const useSocket = (): UseSocketReturn => {
-//   const [socket, setSocket] = useState<Socket | null>(null);
-//   //const { getApiUrl } = useConfig();
-
-//   useEffect(() => {
-//     const initSocket = async () => {
-//       const token = await verifyAuthentication();
-//       //console.log(token); //-> verified as true
-//       if (token) {
-//         const newSocket = io('https://localhost:3001', { 
-//           transports: ['websocket'],
-//            auth: {
-//              token: token
-//            } 
-//         });
-//         setSocket(newSocket);
-//       }
-//     };
-
-//     initSocket();
-
-//     return () => {
-//       if (socket) {
-//         socket.disconnect();
-//       }
-//     };
-//   }, []); // Add dependencies if necessary
-
-//   const send = (channel: string, message: string | object) => {
-//     if (socket) {
-//       //console.log('Send function working');
-//       socket.emit(channel, message);
-//     }
-//   };
-
-//   return { socket, send };
-// };
-
-// export default useSocket;
