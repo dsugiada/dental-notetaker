@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import useConfig from './useConfig';
+import { ObjectId } from 'mongoose';
 
-const useSocket = (userId: string, patientId?: string, connect: boolean = false) => {
+const useSocket = (userId: ObjectId, patientId?: string, connect: boolean = false) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const { getBaseUrl } = useConfig();
   const url = getBaseUrl();

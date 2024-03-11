@@ -8,9 +8,10 @@ import { RootState } from '../../core/store/store';
 import useConfig from '../../core/hooks/useConfig';
 import Select from 'react-select'; // Ensure this package is installed
 import Modal from 'react-modal';
+import { ObjectId, Schema } from 'mongoose';
 
 interface Question {
-  _id: string;
+  _id: Schema.Types.ObjectId;
   text: string;
   options: { text: string }[];
   single: boolean;
@@ -189,10 +190,10 @@ const DentalNotes: React.FC = () => {
   }, [socket, userId]);
 
   //Send selection to backend
-  const handleOptionSelect = (patientId: string, questionId: string, option: string, singleSelect: boolean) => {
+  const handleOptionSelect = (patientId: string, questionId: ObjectId, option: string, singleSelect: boolean) => {
     setSelectedOptions(prev => {
       const updated = { ...prev };
-      const selections = singleSelect ? new Set<string>() : new Set<string>(updated[questionId] || []);
+      const selections = singleSelect ? new Set<string>() : new Set<string>(updated[questionId.toString()] || []);
 
       if (selections.has(option)) {
         selections.delete(option);
@@ -200,7 +201,7 @@ const DentalNotes: React.FC = () => {
         selections.add(option);
       }
 
-      updated[questionId] = Array.from(selections);
+      updated[questionId.toString()] = Array.from(selections);
       const clinicianId = userId;
 
       //database update
@@ -274,11 +275,11 @@ const DentalNotes: React.FC = () => {
             onChange={handlePatientChange}
           />
           {selectedPatient && questions.map(question => (
-            <div key={question._id} className="question">
+            <div key={question._id.toString()} className="question">
               <div className="title">{question.text}</div>
               <div className="options">
                 {question.options.map((option, index) => {
-                  const isSelected = selectedOptions[question._id]?.includes(option.text);
+                  const isSelected = selectedOptions[question._id.toString()]?.includes(option.text);
                   return (
                     <button
                       key={index}

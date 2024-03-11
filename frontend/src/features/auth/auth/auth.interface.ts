@@ -1,8 +1,10 @@
 'use strict'
+import { Schema } from 'mongoose'
+
 
 // Be the same as in the backend
 interface UserResponse {
-  id: string
+  id: Schema.Types.ObjectId,
   email: string
   created: string
   updated: string

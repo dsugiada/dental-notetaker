@@ -14,7 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["cypress", "jest"],
+    "typeRoots": ["./node_modules/@types", "./types", "./cypress/types"],
   },
-  "include": ["src"]
+  "include": ["src", "**/*.ts", "src/**/*", "jest.config.js"]
 }

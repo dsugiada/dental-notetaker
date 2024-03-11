@@ -6,6 +6,7 @@ import axios from 'axios'
 import useConfig from '../../../core/hooks/useConfig'
 import Activation from './activation'
 import { Response } from '../../../app.interface'
+import '@testing-library/jest-dom';
 
 const { getApiUrl } = useConfig()
 

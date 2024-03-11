@@ -7,7 +7,7 @@ import { settings } from '../../../../core/config'
 import { UserResponse, UserData } from '../auth.interface'
 import { ClientError } from '../../../../core/server/server.interface'
 import User from '../../../models/user/user.model'
-
+import { ObjectId, Types } from 'mongoose'
 
 /**
  * Local authorization
@@ -42,10 +42,12 @@ const check = async (
   } else if (!user.active) {
     throw new ClientError(1003, 'account not activated')
   }
+
   const result = {
-    id: user._id,
+    id: user._id as ObjectId,
     email: user.email,
     created: user.created,
+    active: user.active,
     updated: user.updated,
   }
   return result
@@ -60,9 +62,10 @@ const join = async (data: UserData): Promise<UserResponse> => {
   const user = new User(data)
   await user.save()
   const result = {
-    id: user._id,
+    id: user._id as ObjectId,
     email: user.email,
     created: user.created,
+    active: user.active,
     updated: user.updated,
   }
   return result
@@ -93,9 +96,10 @@ const resend = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id,
+    id: user._id as ObjectId,
     email: user.email,
     created: user.created,
+    active: user.active,
     updated: user.updated,
   }
   return result
@@ -127,8 +131,9 @@ const activate = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id,
+    id: user._id as ObjectId,
     email: user.email,
+    active: user.active,
     created: user.created,
     updated: user.updated,
   }
@@ -159,9 +164,10 @@ const login = async (
   res.cookie('token', token, settings.cookie.options)
   res.cookie('refreshToken', refreshToken, settings.cookie.options)
   const result = {
-    id: user.id,
+    id: user.id as ObjectId,
     email: user.email,
     created: user.created,
+    active: user.active,
     updated: user.updated,
   }
   return result
@@ -209,8 +215,9 @@ const recover = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id,
+    id: user._id as ObjectId,
     email: user.email,
+    active: user.active,
     created: user.created,
     updated: user.updated,
   }
@@ -248,9 +255,10 @@ const reset = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id,
+    id: user._id as ObjectId,
     email: user.email,
     created: user.created,
+    active: user.active,
     updated: user.updated,
   }
   return result

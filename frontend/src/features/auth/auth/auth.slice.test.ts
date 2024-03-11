@@ -1,10 +1,11 @@
+import { ObjectId } from 'mongoose'
 import authSlice, { AuthState, setUser } from './auth.slice'
 
 describe('Auth slice', () => {
   const authReducer = authSlice.reducer
   const initialState: AuthState = {
     user: {
-      id: '',
+      id: '' as unknown as ObjectId,
       email: '',
       created: '',
       updated: '',

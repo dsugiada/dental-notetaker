@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../../core/store/store'
 import { UserResponse } from './auth.interface'
+import { ObjectId } from 'mongoose'
 
 interface AuthState {
   user: UserResponse
@@ -8,7 +9,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: {
-    id: '',
+    id: '' as unknown as ObjectId,
     email: '',
     created: '',
     updated: '',

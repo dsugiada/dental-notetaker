@@ -1,3 +1,4 @@
+
 Cypress.on('uncaught:exception', (err, runnable) => {
   return false
 })
@@ -5,8 +6,8 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 import mimelib from 'mimelib'
 
 describe('Activation page', () => {
-  let activationId
-  let activationCode
+  let activationId: string
+  let activationCode: string
 
   it('receive join email', () => {
     cy.request({
@@ -16,11 +17,11 @@ describe('Activation page', () => {
         'Api-token': Cypress.env('EMAIL_API_TOKEN'),
       },
     }).then((response) => {
-      const inbox = response.body
-      expect(inbox).to.be.an('array')
-      expect(inbox[0].subject).to.equal('Join')
-      expect(inbox[0].to_email).to.equal('johndoe@example.com')
-      const emailId = inbox[0].id
+      const inbox = response.body;
+      expect(inbox).to.be.an('array');
+      expect(inbox[0].subject).to.equal('Join');
+      expect(inbox[0].to_email).to.equal('johndoe@example.com');
+      const emailId = inbox[0].id;
       cy.request({
         method: 'GET',
         url: `${Cypress.env('EMAIL_API_URL')}/${emailId}/body.eml`,
@@ -29,16 +30,23 @@ describe('Activation page', () => {
         },
       }).then((response) => {
         // Decode quoted-printable body of the email
-        const email = mimelib.decodeQuotedPrintable(response.body)
-        activationId = email.match(/(?<=activation\/)[^/]+/i)[0]
-        activationCode = email.match(
-          /(?<=Your activation code is <b>*)(\d{4})/i
-        )[0]
-        expect(activationId).to.be.a('string')
-        expect(activationCode).to.be.a('string')
-      })
-    })
-  })
+        const email = mimelib.decodeQuotedPrintable(response.body);
+        const activationIdMatch = email.match(/(?<=activation\/)[^/]+/i);
+        const activationCodeMatch = email.match(/(?<=Your activation code is <b>)(\d{4})/i); // Adjusted regex
+  
+        if (activationIdMatch && activationCodeMatch) {
+          const activationId = activationIdMatch[0];
+          const activationCode = activationCodeMatch[0];
+          expect(activationId).to.be.a('string');
+          expect(activationCode).to.be.a('string');
+        } else {
+          // Handle the case where the matches are not found
+          throw new Error('Activation ID or code not found in the email');
+        }
+      });
+    });
+  });
+  
 
   it('successfully loads', () => {
     cy.visit(`auth/activation/${activationId}`)
@@ -73,12 +81,21 @@ describe('Activation page', () => {
       }).then((response) => {
         // Decode quoted-printable body of the email
         const email = mimelib.decodeQuotedPrintable(response.body)
-        activationId = email.match(/(?<=activation\/)[^/]+/i)[0]
-        activationCode = email.match(
-          /(?<=Your activation code is <b>*)(\d{4})/i
-        )[0]
-        expect(activationId).to.be.a('string')
-        expect(activationCode).to.be.a('string')
+        if (email !== null) {
+          const activationIdMatch = email.match(/(?<=activation\/)[^/]+/i);
+          const activationCodeMatch = email.match(/(?<=Your activation code is <b>*)(\d{4})/i);
+
+          if (activationIdMatch && activationCodeMatch) {
+            activationId = activationIdMatch[0];
+            activationCode = activationCodeMatch[0];
+
+            expect(activationId).to.be.a('string');
+            expect(activationCode).to.be.a('string');
+          } else {
+            // Handle the case where the matches are not found
+            throw new Error('Activation ID or code not found in the email');
+          }
+        }
       })
     })
   })

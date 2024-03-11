@@ -4,6 +4,7 @@ import User from '../../../models/user/user.model'
 import crypto from 'crypto'
 import { UserResponse } from '../auth.interface'
 import { ClientError } from '../../../../core/server/server.interface'
+import { ObjectId } from 'mongoose'
 
 interface Password {
   salt: string
@@ -73,11 +74,16 @@ const check = async (
       updated: 1,
     }
   )
+
+  if (!user) {
+    throw new ClientError(1004, 'User not found');
+  }
+  
   const salt = user.salt
   const hash = createHash(password, salt)
   if (user.password === hash) {
     const result = {
-      id: user._id,
+      id: user._id as ObjectId,
       email: user.email,
       active: user.active,
       created: user.created,
