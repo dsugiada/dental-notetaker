@@ -2,7 +2,7 @@
 FROM node:18-alpine
 WORKDIR /backend
 COPY package*.json /backend/
-RUN yarn install
+RUN npm install --verbose
 COPY . /backend/
 EXPOSE 3001
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
