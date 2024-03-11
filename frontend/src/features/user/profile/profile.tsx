@@ -10,6 +10,7 @@ import { RootState } from '../../../core/store/store';
 import { authSlice } from '../../auth/auth';
 import './profile.scss';
 
+
 interface Question {
   _id: string;
   text: string;
