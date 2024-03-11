@@ -16,11 +16,11 @@ interface Question {
   single: boolean;
 }
 
-interface Patient {
-  _id: string;
-  name: string;
-  // Add more patient fields as needed
-}
+// interface Patient {
+//   _id: string;
+//   name: string;
+//   // Add more patient fields as needed
+// }
 
 interface OptionType {
   value: string;
@@ -46,19 +46,48 @@ const DentalNotes: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user.id) //this is dynamically set at login, so can be pulled globally without issue
 
   //Form socket connection with useSocket hook
-  const { socket, send } = useSocket(userId);
+  const { socket, send } = useSocket(userId, selectedPatient ?? undefined, selectedPatient !== null);
 
   const patientOptions = [
     ...patients.map(patient => ({ value: patient._id, label: patient.name })),
     { value: 'new', label: 'Add new patient...' }, // New option to trigger the modal
   ];
 
+
+  useEffect(() => {
+    const fetchPatientSelections = async () => {
+      if (!selectedPatient) return;
+      
+      try {
+        const response = await axios.get(`${apiUrl}/examinations/getSelections`, {
+          params: {
+            clinicianId: userId,
+            patientId: selectedPatient,
+          },
+        });
+  
+        const selections = response.data; // Assuming this returns an array of selections
+        const updatedSelectedOptions = selections.reduce((acc: { [x: string]: any; }, selection: { questionId: string | number; selectedOptions: any; }) => {
+          acc[selection.questionId] = selection.selectedOptions;
+          return acc;
+        }, {});
+  
+        setSelectedOptions(updatedSelectedOptions);
+      } catch (error) {
+        console.error('Failed to fetch patient selections:', error);
+        toast.warn('Failed to fetch patient selections');
+      }
+    };
+  
+    fetchPatientSelections();
+  }, [apiUrl, selectedPatient, userId]);
+
+
   // Fetch patients list
   useEffect(() => {
     const fetchPatients = async () => {
       try {
         const response = await axios.get(`${apiUrl}/clinician/${userId}/patients`);
-        console.log('Fetched patients:', response.data);
         if (Array.isArray(response.data.result)) {
           setPatients(response.data.result);
         } else {
@@ -79,7 +108,6 @@ const DentalNotes: React.FC = () => {
   useEffect(() => {
     const fetchQuestionsAndSelections = async () => {
       if (selectedPatient) {
-        console.log(selectedPatient)
         try {
           const questionsResponse = await axios.get(`${apiUrl}/questions/retrieve`);
           setQuestions(questionsResponse.data.result);
@@ -217,7 +245,6 @@ const DentalNotes: React.FC = () => {
       referenceNo,
       userId
     }
-    console.log(name, referenceNo)
 
     // ... any other fields ...
 

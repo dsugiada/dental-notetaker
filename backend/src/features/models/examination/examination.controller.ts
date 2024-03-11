@@ -8,6 +8,7 @@ import { response } from '../../../core/server'
 import Examination from './examination.model';
 import Question from '../question/question.model';
 import mongoose from 'mongoose';
+import { ParsedQs } from 'qs';
 
 // Define interfaces for your request body
 interface SaveSelectionRequestBody {
@@ -24,27 +25,37 @@ interface SaveSelectionRequestBody {
  * @param next object
  * @returns object
  */
-const getSections = async (
+const getSelections = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ): Promise<express.Response<any, Record<string, any>>> => {
   try {
-    show.debug('[SELECTION][GET] Request')
-    const result = await Examination.find({})
-    if (!result.length) {
-      throw new ClientError(1002, 'No questions found');
-    } else {
-      show.debug('[SELECTION][GET] Success');
-      return response.send(res, 200, result, false);
+    const { clinicianId, patientId } = req.query; // Assuming these are passed as query parameters
+
+    if (!clinicianId || !patientId) {
+      return res.status(400).json({ message: 'Missing clinicianId or patientId' });
     }
-  } catch (err: any) {
-    show.debug(`[SELECTION][GET] Error ${err.type} ${err.code} ${err.message}`);
-    if (err.type === 'client') {
-      return response.send(res, 400, false, err);
-    } else {
-      return response.send(res, 500, false, err);
+
+    const examination = await Examination.findOne({
+      clinicianId: clinicianId,
+      'patientRecords.patientId': patientId
+    }).exec();
+
+    if (!examination) {
+      return res.status(404).json({ message: 'Examination record not found' });
     }
+
+    const patientRecord = examination.patientRecords.find((record: { patientId: { toString: () => string | string[] | ParsedQs | ParsedQs[]; }; }) => record.patientId.toString() === patientId);
+
+    if (!patientRecord) {
+      return res.status(404).json({ message: 'Patient record not found in examination' });
+    }
+
+    return res.status(200).json(patientRecord.selections);
+  } catch (error) {
+    console.error('Failed to get patient selections:', error);
+    return res.status(500).json({ message: 'Internal server error', error });
   }
 };
 
@@ -200,7 +211,7 @@ const removeSelections = async (
 }
 
 export default {
-  getSections,
+  getSelections,
   saveSelections,
   removeSelections,
 }

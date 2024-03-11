@@ -10,14 +10,14 @@ const init = (io: any): void => {
   io.on('connection', (socket: any): void => {
     show.debug('[SOCKET] Client connected!')
 
-    // Handle joining a private channel
+    // Handle joining a clinician-private channel upon joining
     socket.on('joinPrivateChannel', (userId: string): void => {
       const channel = `private-${userId}`
       socket.join(channel)
       show.debug(`[SOCKET] Client joined private channel: ${channel}`)
     })
 
-    // Handle leaving a private channel
+    // Handle leaving a clinician-private channel upon joining
     socket.on('leavePrivateChannel', (userId: string): void => {
       const channel = `private-${userId}`
       socket.leave(channel)
@@ -28,9 +28,11 @@ const init = (io: any): void => {
       show.debug('[SOCKET] Client disconnected!')
     })
 
+
     socket.on('selectExaminationOption', (data: any) => {
-        const userId = data.userId; // Extract userId from the data payload
-        const channel = `private-${userId}`;
+      const { userId, patientId } = data; // Extract userId from the data payload
+        const channel = patientId ? `private-${userId}-${patientId}` : `private-${userId}`;
+        show.debug(`[SOCKET] Change emitted on: ${channel}`)
         io.to(channel).emit('examinationOptionSelected', data);
     });
   })
