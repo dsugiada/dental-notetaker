@@ -1,3 +1,4 @@
+import React from 'react';
 import './app.scss';
 import { useEffect, useCallback } from 'react';
 import { RootState } from './core/store/store';

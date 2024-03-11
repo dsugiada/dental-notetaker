@@ -1,3 +1,4 @@
+import React from 'react';
 import './notification.scss'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'

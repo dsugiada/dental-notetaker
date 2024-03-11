@@ -1,3 +1,4 @@
+import React from 'react';
 import './background.scss'
 import { useState } from 'react'
 

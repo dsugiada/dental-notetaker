@@ -1,3 +1,4 @@
+import React from 'react';
 import './navigation.scss'
 import homeSlice from '../../features/home/home.slice'
 import { Link, useNavigate } from 'react-router-dom'

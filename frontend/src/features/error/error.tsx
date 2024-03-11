@@ -1,3 +1,4 @@
+import React from 'react';
 import './error.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'

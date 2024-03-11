@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import { ObjectId, Schema } from 'mongoose';
 
 interface Question {
-  _id: Schema.Types.ObjectId;
+  id: Schema.Types.ObjectId;
   text: string;
   options: { text: string }[];
   single: boolean;
@@ -68,8 +68,8 @@ const DentalNotes: React.FC = () => {
         });
   
         const selections = response.data; // Assuming this returns an array of selections
-        const updatedSelectedOptions = selections.reduce((acc: { [x: string]: any; }, selection: { questionId: string | number; selectedOptions: any; }) => {
-          acc[selection.questionId] = selection.selectedOptions;
+        const updatedSelectedOptions = selections.reduce((acc: { [x: string]: any; }, selection: { questionId: ObjectId | number; selectedOptions: any; }) => {
+          acc[selection.questionId.toString()] = selection.selectedOptions;
           return acc;
         }, {});
   
@@ -275,15 +275,15 @@ const DentalNotes: React.FC = () => {
             onChange={handlePatientChange}
           />
           {selectedPatient && questions.map(question => (
-            <div key={question._id.toString()} className="question">
+            <div key={question.id.toString()} className="question">
               <div className="title">{question.text}</div>
               <div className="options">
                 {question.options.map((option, index) => {
-                  const isSelected = selectedOptions[question._id.toString()]?.includes(option.text);
+                  const isSelected = selectedOptions[question.id.toString()]?.includes(option.text);
                   return (
                     <button
                       key={index}
-                      onClick={() => handleOptionSelect(selectedPatient, question._id, option.text, question.single)}
+                      onClick={() => handleOptionSelect(selectedPatient, question.id, option.text, question.single)}
                       className={`option-button ${isSelected ? 'selected' : ''}`}
                     >
                       {option.text}

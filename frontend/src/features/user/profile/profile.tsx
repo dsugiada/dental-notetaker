@@ -9,17 +9,18 @@ import axios from 'axios';
 import { RootState } from '../../../core/store/store';
 import { authSlice } from '../../auth/auth';
 import './profile.scss';
+import { Schema } from 'mongoose';
 
 
 interface Question {
-  _id: string;
+  id: Schema.Types.ObjectId;
   text: string;
   options: { text: string }[];
 }
 
 // Define your user type based on your state structure
 interface User {
-  id: string;
+  id: Schema.Types.ObjectId;
 }
 
 // interface UserResponse {
@@ -61,7 +62,7 @@ const Profile: React.FC = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }
   }
 
   const checkProfile = async () => {
@@ -132,8 +133,8 @@ const Profile: React.FC = () => {
               <>
                 <div className="questions-list">
                   {questions.map((question) => (
-                    <div key={question._id} className="question-item">
-                      <div className="question-text">{question.text} <button onClick={() => handleRemoveQuestion(question._id)}> Remove </button></div>
+                    <div key={question.id.toString()} className="question-item">
+                      <div className="question-text">{question.text} <button onClick={() => handleRemoveQuestion(question.id.toString())}> Remove </button></div>
                       <div className="options">
                         {question.options.map((option, index) => (
                           <button

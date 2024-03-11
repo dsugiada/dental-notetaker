@@ -7,12 +7,12 @@ import { ClientError } from '../../../core/server/server.interface'
 import { response } from '../../../core/server'
 import Examination from './examination.model';
 import Question from '../question/question.model';
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { ParsedQs } from 'qs';
 
 // Define interfaces for your request body
 interface SaveSelectionRequestBody {
-  clinicianId: string;
+  clinicianId: Schema.Types.ObjectId;
   patientId: string;
   questionId: string;
   selectedOptions: string[];
@@ -63,7 +63,6 @@ const saveSelections = async (req: Request, res: Response): Promise<Response> =>
   try {
     show.debug('[SELECTION][SAVE] Request');
     const { clinicianId, patientId, questionId, selectedOptions } = req.body as SaveSelectionRequestBody;
-    console.log(clinicianId, patientId, questionId, selectedOptions);
 
     // Validate the existence of the questionId in the Question collection
     const questionExists = await Question.findById(questionId);
@@ -72,14 +71,12 @@ const saveSelections = async (req: Request, res: Response): Promise<Response> =>
     }
 
     // Convert clinicianId to ObjectId
-    const clinicianObjectId = new mongoose.Types.ObjectId(clinicianId);
+    const clinicianObjectId = clinicianId;
 
     // Convert patientId to ObjectId
-    console.log(clinicianObjectId)
-    console.log(mongoose.isValidObjectId(patientId))
     const patientObjectId = new mongoose.Types.ObjectId(patientId);
-    console.log(patientId)
-    console.log(patientObjectId)
+
+    
     // Find or create an examination record for the clinician and patient
     let examination = await Examination.findOne({ clinicianId: clinicianObjectId, 'patientRecords.patientId': patientObjectId });
 
@@ -92,9 +89,15 @@ const saveSelections = async (req: Request, res: Response): Promise<Response> =>
     } else {
       // Find existing patientRecord or create a new one
       let patientRecord = examination.patientRecords.find((record: { patientId: { equals: (arg0: mongoose.Types.ObjectId) => any; }; }) => record.patientId.equals(patientObjectId));
-
+      
       if (!patientRecord) {
-        patientRecord = { patientObjectId, selections: [{ questionId, selectedOptions }] };
+        const patientRecord = {
+          patientObjectId: new mongoose.Types.ObjectId(patientObjectId),
+          selections: [{
+            questionId: new mongoose.Types.ObjectId(questionId),
+            selectedOptions
+          }]
+        };
         examination.patientRecords.push(patientRecord);
       } else {
         // Update existing selection or add a new selection

@@ -1,3 +1,4 @@
+import React from 'react';
 import './recovery.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'

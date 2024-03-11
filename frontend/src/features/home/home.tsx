@@ -1,3 +1,4 @@
+import React from 'react';
 import './home.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -25,7 +26,7 @@ const Home = () => {
           started.
         </div>
         <div className="text">
-          Like the project? Show some support at{' '}
+          Like the project? Show some support at
           <a
             className="link"
             target="_blank"
@@ -36,7 +37,7 @@ const Home = () => {
           </a>
           . <FontAwesomeIcon className="icon" icon={faThumbsUp} />
           <br />
-          Don't forget to give it a star on{' '}
+          Dont forget to give it a star on
           <a
             className="link"
             target="_blank"
@@ -63,7 +64,7 @@ const Home = () => {
         </div>
         <div className="text">
           See the readme for the complete documentation. It also includes
-          development practices, guidelines, and conventions.{' '}
+          development practices, guidelines, and conventions
           <a
             className="link"
             href="https://github.com/tamasszoke/mern-seed#readme"

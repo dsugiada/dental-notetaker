@@ -1,3 +1,4 @@
+import React from 'react';
 import './join.scss'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

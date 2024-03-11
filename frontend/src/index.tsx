@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import App from './app'
+import React from 'react';
 
 // Routing based on
 // https://github.com/remix-run/react-router/blob/main/docs/getting-started/installation.md#basic-installation
@@ -17,13 +18,15 @@ const container = document.getElementById('root')!
 const root = ReactDOM.createRoot(container)
 
 root.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
+      </Provider>
+    </BrowserRouter>
+  </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function
