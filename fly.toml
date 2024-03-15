@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for dental-notetaker on 2024-03-15T17:52:21+11:00
+# fly.toml app configuration file generated for dental-notetaker-restless-sound-3172 on 2024-03-15T18:20:52+11:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'dental-notetaker'
+app = 'dental-notetaker-restless-sound-3172'
 primary_region = 'syd'
 
 [build]

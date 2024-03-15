@@ -9,7 +9,7 @@ const env = process.env.NODE_ENV || 'development'
 // Helper for the env path
 let basePath = path.join(__dirname, '../../../../')
 if (env === 'production') {
-  basePath = './'
+  basePath = './backend'
 }
 
 // Load the env file

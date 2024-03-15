@@ -64,6 +64,7 @@
     "@types/jest": "^29.5.12",
     "@types/react-modal": "^3.16.3",
     "cypress": "^13.6.6",
+    "eslint-plugin-cypress": "^2.15.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "mimelib": "^0.3.1",
     "sass": "^1.70.0"

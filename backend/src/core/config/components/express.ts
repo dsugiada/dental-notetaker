@@ -12,7 +12,8 @@ import contentSecurityPolicy from 'helmet-csp'
 //import passportStrategy from './passport';
 
 export const corsOptions = {
-  origin: ['https://localhost:3000'], //added for development, currently hardcoded, need to reference settings.ts
+
+  origin: [settings.url.api], //added for development, currently hardcoded, need to reference settings.ts
   methods: ["GET", "POST"],
   credentials: true,
   'Access-Control-Allow-Credentials': true,
