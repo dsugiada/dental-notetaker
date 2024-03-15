@@ -24,10 +24,10 @@ module.exports = {
           from: './package.json',
           to: './package.json',
         },
-        // {
-        //   from: './.env/.env.production',
-        //   to: './.env/.env.production',
-        // },
+        {
+          from: './.env/.env.production',
+          to: './.env/.env.production',
+        },
         {
           from: './.ssl',
           to: './.ssl',
