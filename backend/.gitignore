@@ -51,7 +51,7 @@ typings/
 *.tgz
 
 # Environment variables folder
-.env
+#.env
 
 # Next.js build output
 .next
@@ -60,10 +60,10 @@ typings/
 .sass-cache/
 
 # Ssl
-.ssl/
+#.ssl/
 
 # Jwt
-.jwt/
+#.jwt/
 
 # Production
 build/
