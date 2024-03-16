@@ -52,7 +52,7 @@
 **/*.tgz
 
 # Env file
-**/.env
+#**/.env
 
 # Next.js build output
 **/.next

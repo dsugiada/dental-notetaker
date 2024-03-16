@@ -40,14 +40,14 @@ module.exports = {
           from: 'pm2.config.json',
           to: 'pm2.config.json',
         },
-        {
-          from: '../frontend/build',
-          to: 'public', // Adjusted according to your file structure
-        },
-        {
-          from: 'public',
-          to: 'frontend/static', // Ensure this directory structure exists or adjust as necessary
-        },
+        // {
+        //   from: '../frontend/build',
+        //   to: 'public', // Adjusted according to your file structure
+        // },
+        // {
+        //   from: 'public',
+        //   to: 'frontend/static', // Ensure this directory structure exists or adjust as necessary
+        // },
       ],
     }),    
     new FileManagerPlugin({
