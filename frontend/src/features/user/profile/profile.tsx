@@ -13,18 +13,18 @@ import { Schema } from 'mongoose';
 
 
 interface Question {
-  id: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
   text: string;
   options: { text: string }[];
 }
 
 // Define your user type based on your state structure
 interface User {
-  id: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
 }
 
 // interface UserResponse {
-//   id: string;
+//   _id: Schema.Types.ObjectId;
 //   // other properties
 // }
 
@@ -55,7 +55,6 @@ const Profile: React.FC = () => {
         setLoadingMessage('Loading questions...');
         const response = await axios.get(`${apiUrl}/questions/retrieve`);
         setQuestions(response.data.result);
-        console.log(response)
       } catch (error) {
         console.error('Failed to load questions', error);
         toast.warn('Failed to load questions');
@@ -69,7 +68,7 @@ const Profile: React.FC = () => {
     try {
       setLoading(true);
       setLoadingMessage('Loading profile...');
-      const data = { id: user.id };
+      const data = { id: user._id };
       const response = await axios.post(`${apiUrl}/user/profile/check`, data);
       setUserData(response.data.result);
     } catch (error) {
@@ -87,7 +86,7 @@ const Profile: React.FC = () => {
     try {
       setLoading(true)
       setLoadingMessage('Removing account...')
-      const data = { id: user.id }
+      const data = { id: user._id }
       await axios.post(`${apiUrl}/user/profile/remove`, data)
       toast.success('Account removed successfully!')
       dispatch(authSlice.actions.setUser(false))
@@ -104,6 +103,7 @@ const Profile: React.FC = () => {
     // Logic to open add question modal or form
     // This might involve setting a state to show a modal, for example
   };
+
 
   const handleRemoveQuestion = async (questionId: string) => {
     // Removal logic here
@@ -133,8 +133,8 @@ const Profile: React.FC = () => {
               <>
                 <div className="questions-list">
                   {questions.map((question) => (
-                    <div key={question.id.toString()} className="question-item">
-                      <div className="question-text">{question.text} <button onClick={() => handleRemoveQuestion(question.id.toString())}> Remove </button></div>
+                    <div key={question._id.toString()} className="question-item">
+                      <div className="question-text">{question.text} <button onClick={() => handleRemoveQuestion(question._id.toString())}> Remove </button></div>
                       <div className="options">
                         {question.options.map((option, index) => (
                           <button

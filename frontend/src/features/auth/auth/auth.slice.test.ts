@@ -5,7 +5,7 @@ describe('Auth slice', () => {
   const authReducer = authSlice.reducer
   const initialState: AuthState = {
     user: {
-      id: '' as unknown as ObjectId,
+      _id: '' as unknown as ObjectId,
       email: '',
       created: '',
       updated: '',

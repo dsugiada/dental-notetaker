@@ -4,7 +4,7 @@ import { Schema } from 'mongoose'
 
 // Be the same as in the backend
 interface UserResponse {
-  id: Schema.Types.ObjectId,
+  _id: Schema.Types.ObjectId,
   email: string
   active: boolean
   created: string

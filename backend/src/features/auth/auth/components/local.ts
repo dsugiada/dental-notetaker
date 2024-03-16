@@ -44,7 +44,7 @@ const check = async (
   }
 
   const result = {
-    id: user._id as ObjectId,
+    _id: user._id as ObjectId,
     email: user.email,
     created: user.created,
     active: user.active,
@@ -62,7 +62,7 @@ const join = async (data: UserData): Promise<UserResponse> => {
   const user = new User(data)
   await user.save()
   const result = {
-    id: user._id as ObjectId,
+    _id: user._id as ObjectId,
     email: user.email,
     created: user.created,
     active: user.active,
@@ -96,7 +96,7 @@ const resend = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id as ObjectId,
+    _id: user._id as ObjectId,
     email: user.email,
     created: user.created,
     active: user.active,
@@ -131,7 +131,7 @@ const activate = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id as ObjectId,
+    _id: user._id as ObjectId,
     email: user.email,
     active: user.active,
     created: user.created,
@@ -164,7 +164,7 @@ const login = async (
   res.cookie('token', token, settings.cookie.options)
   res.cookie('refreshToken', refreshToken, settings.cookie.options)
   const result = {
-    id: user.id as ObjectId,
+    _id: user._id as ObjectId,
     email: user.email,
     created: user.created,
     active: user.active,
@@ -215,7 +215,7 @@ const recover = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id as ObjectId,
+   _id: user._id as ObjectId,
     email: user.email,
     active: user.active,
     created: user.created,
@@ -255,7 +255,7 @@ const reset = async (
     throw new ClientError(1002, 'account not found')
   }
   const result = {
-    id: user._id as ObjectId,
+    _id: user._id as ObjectId,
     email: user.email,
     created: user.created,
     active: user.active,

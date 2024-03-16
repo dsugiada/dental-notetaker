@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import { ObjectId, Schema } from 'mongoose';
 
 interface Question {
-  id: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
   text: string;
   options: { text: string }[];
   single: boolean;
@@ -44,7 +44,7 @@ const DentalNotes: React.FC = () => {
   const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
 
   // Accessing userId from Redux store
-  const userId = useSelector((state: RootState) => state.auth.user.id) //this is dynamically set at login, so can be pulled globally without issue
+  const userId = useSelector((state: RootState) => state.auth.user._id) //this is dynamically set at login, so can be pulled globally without issue
 
   //Form socket connection with useSocket hook
   const { socket, send } = useSocket(userId, selectedPatient ?? undefined, selectedPatient !== null);
@@ -275,15 +275,15 @@ const DentalNotes: React.FC = () => {
             onChange={handlePatientChange}
           />
           {selectedPatient && questions.map(question => (
-            <div key={question.id.toString()} className="question">
+            <div key={question._id.toString()} className="question">
               <div className="title">{question.text}</div>
               <div className="options">
                 {question.options.map((option, index) => {
-                  const isSelected = selectedOptions[question.id.toString()]?.includes(option.text);
+                  const isSelected = selectedOptions[question._id.toString()]?.includes(option.text);
                   return (
                     <button
                       key={index}
-                      onClick={() => handleOptionSelect(selectedPatient, question.id, option.text, question.single)}
+                      onClick={() => handleOptionSelect(selectedPatient, question._id, option.text, question.single)}
                       className={`option-button ${isSelected ? 'selected' : ''}`}
                     >
                       {option.text}

@@ -7,8 +7,7 @@ const useSocket = (userId: ObjectId, patientId?: string, connect: boolean = fals
   const [socket, setSocket] = useState<Socket | null>(null);
   const { getBaseUrl } = useConfig();
   const url = getBaseUrl();
-
-  console.log(connect)
+  
   useEffect(() => {
     if (connect) { //prevent immediate connection with this flag
       // Create a socket instance when the hook is run for the first time

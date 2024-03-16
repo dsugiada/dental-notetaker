@@ -8,12 +8,13 @@ import helmet from 'helmet'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import contentSecurityPolicy from 'helmet-csp'
-//import passport from 'passport'
-//import passportStrategy from './passport';
+
+
+console.log(settings.url.index)
 
 export const corsOptions = {
 
-  origin: [settings.url.api], //added for development, currently hardcoded, need to reference settings.ts
+  origin: [settings.url.index], //added for development, currently hardcoded, need to reference settings.ts
   methods: ["GET", "POST"],
   credentials: true,
   'Access-Control-Allow-Credentials': true,
