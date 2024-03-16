@@ -21,35 +21,35 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: './package.json',
-          to: './package.json',
+          from: 'package.json',
+          to: 'package.json',
         },
         {
-          from: './.env/.env.production',
-          to: './.env/.env.production',
+          from: '.env/.env.production',
+          to: '.env/.env.production',
         },
         {
-          from: './.ssl',
-          to: './.ssl',
+          from: '.ssl',
+          to: '.ssl',
         },
         {
-          from: './.jwt',
-          to: './.jwt',
+          from: '.jwt',
+          to: '.jwt',
         },
         {
-          from: './pm2.config.json',
-          to: './pm2.config.json',
+          from: 'pm2.config.json',
+          to: 'pm2.config.json',
         },
         {
           from: '../frontend/build',
-          to: './public',
+          to: 'public', // Adjusted according to your file structure
         },
         {
-          from: './public',
-          to: './frontend/static',
+          from: 'public',
+          to: 'frontend/static', // Ensure this directory structure exists or adjust as necessary
         },
       ],
-    }),
+    }),    
     new FileManagerPlugin({
       events: {
         onEnd: {

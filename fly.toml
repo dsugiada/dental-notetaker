@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for dental-notetaker-nameless-cherry-9767 on 2024-03-16T14:26:46+11:00
+# fly.toml app configuration file generated for dental-notetaker-summer-meadow-6892 on 2024-03-16T14:51:26+11:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'dental-notetaker-nameless-cherry-9767'
+app = 'dental-notetaker-summer-meadow-6892'
 primary_region = 'syd'
 
 [build]

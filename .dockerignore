@@ -147,7 +147,7 @@ frontend/**/.pnp.js
 frontend/coverage
 
 # Production
-frontend/build
+#frontend/build
 
 # Misc
 frontend/**/.DS_Store
