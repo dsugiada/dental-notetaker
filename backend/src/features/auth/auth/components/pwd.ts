@@ -83,7 +83,7 @@ const check = async (
   const hash = createHash(password, salt)
   if (user.password === hash) {
     const result = {
-      id: user._id as ObjectId,
+      _id: user._id as ObjectId,
       email: user.email,
       active: user.active,
       created: user.created,

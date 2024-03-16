@@ -3,7 +3,7 @@ services:
   app:
     container_name: app
     build:
-      context: ./
+      context: ./backend
     restart: always
     ports:
       - '${PRODUCTION_PORT}:${PRODUCTION_PORT}'

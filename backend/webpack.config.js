@@ -42,7 +42,7 @@ module.exports = {
         },
         {
           from: '../frontend/build',
-          to: './frontend',
+          to: './public',
         },
         {
           from: './public',
